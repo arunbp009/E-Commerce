@@ -6,7 +6,6 @@
         id="new"
         style="position: relative; padding: 12px 0; position: fixed"
       >
-
         <v-img src="logo.png" class="navbar__logo"></v-img>
 
         <div class="navbar__links">
@@ -18,19 +17,8 @@
               to="/selectedproducts"
               class="navbar__link"
             ></RouterLink>
-            <!-- <router-link
-              class="navbar__link"
-              to="/selectedproducts"
-            ></router-link> -->
           </div>
         </div>
-        <!-- {{productsTitle}} -->
-        <!-- <v-autocomplete
-          v-model="search"
-          :items="productsTitle"
-          label="Search"
-          :menu-props="{ maxHeight: '300px' }"
-        ></v-autocomplete> -->
         <v-col cols="4" sm="2" md="3">
           <v-text-field
             v-model="search"
@@ -58,7 +46,6 @@
             :label="label"
             @click="toggleDarkMode"
           ></v-switch>
-          <!-- <p>{{ darkMode ? "Dark Mode " : "Light Mode" }}</p> -->
         </div>
       </v-app-bar>
     </v-layout>
@@ -136,7 +123,6 @@ export default {
           console.error(error);
         });
     },
-
   },
 };
 </script>

@@ -66,14 +66,18 @@
               <tr v-for="item in cartItemsAdded" :key="item.id">
                 <td>{{ item.title }}</td>
                 <td>{{ item.afterDiscountPrice }}</td>
-                <td>{{ item.countObj }}</td>
-                <td>{{ item.afterDiscountPrice * item.countObj }}</td>
+                <td>{{ item.PCsCount }}</td>
+                <td>{{ item.afterDiscountPrice * item.PCsCount }}</td>
               </tr>
               <tr>
                 <td></td>
-                <td></td>
-                <td>Total price:</td>
-                <td>{{ totalAmount }}</td>
+                <!-- <td></td> -->
+                <td colspan="2" style="font-size: 20px; font-weight: bold">
+                  Total price:
+                </td>
+                <td style="font-size: 20px; font-weight: bold">
+                  {{ totalAmount }} rs
+                </td>
               </tr>
             </tbody>
           </v-table>
@@ -84,17 +88,47 @@
 
     <v-dialog v-model="dialogVisible" persistent max-width="500px">
       <v-card>
-        <v-card-title class="headline">Confirm Payment </v-card-title>
+        <v-card-title class="success-popup-header"
+          >Confirm Payment
+        </v-card-title>
         <v-card-text>
-          <p>Total Items : {{ totalCount }} No</p>
+          <p class="text-bold">Total Items : {{ totalCount }} No</p>
         </v-card-text>
         <v-card-text>
-          <p>Total Amount : {{ totalAmount }} rs</p>
+          <p class="text-bold">Total Amount : {{ totalAmount }} rs</p>
         </v-card-text>
-        <v-card-text> Are you sure you want to proceed Order? </v-card-text>
+        <v-card-text class="text-bold">
+          Are you sure you want to proceed Order?
+        </v-card-text>
         <v-card-actions>
-          <v-btn color="primary" text @click="cancelConfirmation">Cancel</v-btn>
-          <v-btn color="error" text @click="confirmAction">Place Order</v-btn>
+          <v-btn class="btn-error" text @click="cancelConfirmation"
+            >Cancel</v-btn
+          >
+          <v-btn class="btn-success" text @click="confirmAction"
+            >Place Order</v-btn
+          >
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-dialog v-model="showSuccessPopup" max-width="400px">
+      <v-card>
+        <v-card-title class="success-popup-header">Success!</v-card-title>
+        <v-card-text class="success-popup-message"
+          >Order Placed successfully!.</v-card-text
+        >
+        <v-card-actions>
+          <v-btn class="btn-success" @click="closeSuccessPopup">Close</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-dialog v-model="showErrorPopup" max-width="400px">
+      <v-card>
+        <v-card-title class="Error-popup-header">Error Message!</v-card-title>
+        <v-card-text class="Error-popup-message"
+          >Add items to Cart to Place Order!.</v-card-text
+        >
+        <v-card-actions>
+          <v-btn class="btn-error" @click="closeErrorPopup">Close</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -112,11 +146,13 @@ export default {
   },
   data() {
     return {
+      showErrorPopup: false,
+      showSuccessPopup: false,
       dialogVisible: false,
       cartItems: [],
       cartItemsAdded: [],
       totalAmount: 0,
-      totalCount: 0,
+      totalCount: this.updateCount(),
     };
   },
   mounted() {
@@ -124,10 +160,24 @@ export default {
   },
   computed: {
     ...mapState(useStore, ["getCartItems"]),
+    orderStatus() {
+      return `${this.getCartItems}`;
+    },
+  },
+  watch: {
+    orderStatus() {
+      if (this.getCartItems.length == 0) {
+        this.cart();
+      }
+    },
   },
   methods: {
     cart() {
       this.cartItems = this.getCartItems;
+      console.log("this.cartItems", this.cartItems);
+      if (this.cartItems.length == 0) {
+        this.totalAmount = 0.0;
+      }
       // ----------
       const objectCount = {};
       this.cartItems.forEach((obj) => {
@@ -142,8 +192,8 @@ export default {
       uniqueObjects.forEach((obj) => {
         const key = JSON.stringify(obj);
         const count = objectCount[key];
-        obj.countObj = count;
-        this.totalCount += obj.countObj;
+        obj.PCsCount = count;
+        this.totalCount += obj.PCsCount;
       });
       // this.totalCount=4
       this.cartItemsAdded = uniqueObjects;
@@ -152,9 +202,9 @@ export default {
         let afterDiscount = 100 - ele.discountPercentage;
         ele.afterDiscountPrice = (ele.price * afterDiscount) / 100;
         ele.afterDiscountPrice = ele.afterDiscountPrice.toFixed(2);
-        this.totalAmount += ele.afterDiscountPrice * ele.countObj;
+        this.totalAmount += ele.afterDiscountPrice * ele.PCsCount;
       });
-      this.totalAmount ? this.totalAmount.toFixed(2) : 0;
+      this.totalAmount = Math.floor(this.totalAmount);
     },
 
     addItems() {
@@ -170,18 +220,40 @@ export default {
       this.totalAmount = 0;
 
       this.cartItemsAdded.forEach((ele) => {
-        this.totalAmount += ele.afterDiscountPrice * ele.countObj;
+        this.totalAmount += ele.afterDiscountPrice * ele.PCsCount;
       });
-      this.totalAmount = this.totalAmount.toFixed(2);
+      this.totalAmount = Math.floor(this.totalAmount);
+      this.updateCount();
     },
     orderItem() {
-      this.dialogVisible = true;
+      if (this.cartItemsAdded.length > 0) {
+        this.dialogVisible = true;
+      } else {
+        this.showErrorPopup = true;
+      }
     },
     confirmAction() {
       this.dialogVisible = false;
+      console.log("data to send backend", this.cartItemsAdded);
+      if (this.cartItemsAdded.length > 0) {
+        this.showSuccessPopup = true;
+      }
+
+      let store = useStore();
+      store.addedToCart([]);
     },
     cancelConfirmation() {
       this.dialogVisible = false;
+    },
+    updateCount() {
+      let store = useStore();
+      return store.$state.cartItems.length;
+    },
+    closeSuccessPopup() {
+      this.showSuccessPopup = false;
+    },
+    closeErrorPopup() {
+      this.showErrorPopup = false;
     },
   },
 };
@@ -236,5 +308,34 @@ export default {
 }
 .imgCustom .v-img__img.v-img__img--contain {
   object-fit: cover;
+}
+.success-popup-header {
+  background-color: #4caf50;
+  color: #fff;
+}
+
+.Error-popup-header {
+  background-color: #f01906;
+  color: #fff;
+}
+.btn-error {
+  background-color: #f01906;
+  margin: auto;
+}
+.btn-success {
+  background-color: #4caf50;
+  margin: auto;
+}
+.Error-popup-message {
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.success-popup-message {
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+.text-bold {
+  font-weight: bold;
 }
 </style>

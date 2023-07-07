@@ -55,7 +55,7 @@ export default {
   },
   data() {
     return {
-      totalCount: 0,
+      totalCount: this.updateCount(),
       productsList: {},
       store: useStore(),
       showSnackbar: false,
@@ -79,6 +79,10 @@ export default {
         .catch((error) => {
           console.error(error);
         });
+    },
+    updateCount() {
+      let store = useStore();
+      return store.$state.cartItems.length;
     },
     addToCart(product) {
       let store = useStore();

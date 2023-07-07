@@ -1,7 +1,6 @@
 <template>
   <div class="product-details">
     <nav-bar :totalCount="totalCount"></nav-bar>
-
     <v-row>
       <v-col>
         <v-card
@@ -84,32 +83,25 @@
 <script>
 import navbar from "./NavBar.vue";
 
-
 import axios from "axios";
 import { useStore } from "../stores/cart.store";
-
-
 
 export default {
   name: "SelectedProducts",
   components: {
     "nav-bar": navbar,
-
   },
   data() {
     return {
-      totalCount: 0,
+      totalCount: this.updateCount(),
       currentIndex: 0,
       ProductDetials: {},
       productsListDetail: {},
       showSnackbar: false,
       snackbarMessage: "Item Added to Cart!",
       snackbarColor: "success",
-
-  
-  }
+    };
   },
-    
 
   created() {
     setInterval(() => {
@@ -130,6 +122,10 @@ export default {
         .catch((error) => {
           console.error(error);
         });
+    },
+    updateCount() {
+      let store = useStore();
+      return store.$state.cartItems.length;
     },
     addToCart(items) {
       let store = useStore();
@@ -216,9 +212,9 @@ export default {
   top: -600px;
   right: -1000px;
 }
-.v-card {
+/* .v-card {
   z-index: 1 !important;
-}
+} */
 </style>
 <style>
 .v-window__controls {

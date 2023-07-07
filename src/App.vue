@@ -3,7 +3,6 @@
     <div class="app-container">
       <nav-bar></nav-bar>
 
-      <div class="mt-20" style="top: 50px"></div>
       <router-view />
     </div>
   </v-app>
