@@ -89,6 +89,9 @@ export default {
       store.addedToCart(product);
       this.showSnackbar = true;
       this.totalCount = store.$state.cartItems.length;
+        setTimeout(() => {
+        this.showSnackbar = false;
+      }, 2000);
     },
     viewDetails(product) {
       this.$router.push({ path: "/viewproduct/" + product.id });
@@ -121,8 +124,9 @@ export default {
   align-items: center;
 }
 .snackbar-custom {
-  position: relative;
+  position: static;
+  float: right;
   top: -600px;
-  right: -1000px;
+  right: -1150px;
 }
 </style>
