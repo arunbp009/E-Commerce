@@ -1,7 +1,11 @@
 <template>
   <v-card class="navbar">
     <v-layout style="position: relative; z-index: 1">
-      <v-app-bar class="navbar__app-bar" id="new" style="position: relative">
+      <v-app-bar
+        class="navbar__app-bar"
+        id="new"
+        style="position: relative; padding: 12px 0; position: fixed"
+      >
         <v-img src="logo.png" class="navbar__logo"></v-img>
 
         <div class="navbar__links">
@@ -20,17 +24,32 @@
           </div>
         </div>
         <!-- {{productsTitle}} -->
-        <v-autocomplete
+        <!-- <v-autocomplete
           v-model="search"
           :items="productsTitle"
           label="Search"
-          :custom-filter="customFilter"
           :menu-props="{ maxHeight: '300px' }"
-      
-        ></v-autocomplete>
+        ></v-autocomplete> -->
+        <v-col cols="4" sm="2" md="3">
+          <v-text-field
+            v-model="search"
+            append-icon="mdi-magnify"
+            label="Search"
+            outlined
+            rounded
+            dense
+            solo-inverted
+          ></v-text-field>
+        </v-col>
 
         <v-spacer></v-spacer>
-        <v-icon class="navbar__cart-icon">mdi-cart</v-icon>
+        <div class="crtIcon">
+          <v-icon class="navbar__cart-icon" @click="cartItems()"
+            >mdi-cart</v-icon
+          ><span>
+            {{ totalCount ? totalCount : 0 }}
+          </span>
+        </div>
         <div style="margin: 20px 30px 0 30px">
           <v-switch
             v-model="darkMode"
@@ -47,6 +66,7 @@
 <script>
 import { RouterLink } from "vue-router";
 import axios from "axios";
+
 export default {
   name: "NavBar",
   components: {
@@ -61,10 +81,24 @@ export default {
       productsList: {},
       displayProductsList: {},
       productsTitle: [],
+      displayCartItem: [],
     };
+  },
+  props: {
+    totalCount: {
+      type: Number,
+      default: 0,
+    },
   },
   mounted() {
     this.fetchData();
+  },
+  watch: {
+    search(newValue) {
+      if (newValue != "") {
+        this.funSearch(newValue);
+      }
+    },
   },
   methods: {
     toggleDarkMode() {
@@ -78,6 +112,12 @@ export default {
 
         AppID.classList.remove("dark");
       }
+    },
+    funSearch(val) {
+      this.$emit("searchValue", val);
+    },
+    cartItems() {
+      this.$router.push({ path: "/checkout" });
     },
     fetchData() {
       axios
@@ -93,29 +133,6 @@ export default {
           console.error(error);
         });
     },
-    // SearchProducts() {
-    //   console.log("enter to search products", this.search);
-    //   console.log("aaaaaaaaaaaaaaaaaaa");
-    // },
-    // customFilter(queryText) {
-    //   let searchitem = [];
-    //   let listItem = [];
-    //   this.productsList.forEach((element) => {
-    //     if (element.title.includes(queryText)) {
-    //       searchitem.push(element.title);
-    //       listItem.push(element);
-    //     }
-    //   });
-    //   this.productsTitle = searchitem;
-    //   console.log("this.productsTitle", this.productsTitle);
-    //   listItem.forEach((ele) => {
-    //     this.productsList.forEach((item) => {
-    //       if (ele.title == item.title) {
-    //         this.displayProductsList.push(item)
-    //       }
-    //     });
-    //   });
-    // },
   },
 };
 </script>
@@ -154,9 +171,27 @@ export default {
 }
 
 .navbar__cart-icon {
-  font-size: 24px;
+  font-size: 30px !important;
   color: white;
   margin-right: 10px;
+  position: relative;
+}
+.crtIcon {
+  position: relative;
+}
+.crtIcon span {
+  position: absolute;
+  right: 10px;
+  top: -12px;
+  margin: auto 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  font-size: 10px;
 }
 .dark .app-container {
   background: #000;
@@ -164,7 +199,7 @@ export default {
 }
 .dark #new {
   transition: all 1s ease;
-  box-shadow: inset 0 0 0 0 #3e9fdc !important;
+  box-shadow: inset 0 0 100px 0 rgb(204, 204, 204) !important;
 }
 .dark .mdi-cart::before {
   color: #000;
