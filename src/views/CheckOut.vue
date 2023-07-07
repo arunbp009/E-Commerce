@@ -174,7 +174,6 @@ export default {
   methods: {
     cart() {
       this.cartItems = this.getCartItems;
-      console.log("this.cartItems", this.cartItems);
       if (this.cartItems.length == 0) {
         this.totalAmount = 0.0;
       }
@@ -237,6 +236,10 @@ export default {
       console.log("data to send backend", this.cartItemsAdded);
       if (this.cartItemsAdded.length > 0) {
         this.showSuccessPopup = true;
+        setTimeout(()=>{
+        this.$router.push({ path: "/productslist" });
+
+        },2000)
       }
 
       let store = useStore();
@@ -251,6 +254,7 @@ export default {
     },
     closeSuccessPopup() {
       this.showSuccessPopup = false;
+      this.$router.push({ path: "/productslist" });
     },
     closeErrorPopup() {
       this.showErrorPopup = false;
