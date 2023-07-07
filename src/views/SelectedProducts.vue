@@ -1,83 +1,223 @@
 <template>
-<div>
-   <nav-bar></nav-bar>
-  
-  <h1>selected products</h1>
+  <div class="product-details">
+    <nav-bar :totalCount="totalCount"></nav-bar>
+    <v-row>
+      <v-col>
+        <v-card
+          class="mb-4 product-card align-items"
+          :style="{
+            backgroundColor: '#f3c47c',
+            color: 'black',
+            margin: '100px auto 0 ',
+          }"
+        >
+          <v-card-title class="brand align-items">{{
+            ProductDetials.brand
+          }}</v-card-title>
+          <div class="carousel-container">
+            <v-carousel
+              cycle
+              :interval="currentIndex === 0 ? 500 : 3000"
+              hide-delimiters
+              class="carousel-container"
+              :style="{ backgroundColor: '#f3c47c', color: 'black' }"
+            >
+              <v-carousel-item
+                v-for="(image, index) in ProductDetials.images"
+                :key="index"
+              >
+                <v-sheet class="image-container">
+                  <v-img
+                    :src="image"
+                    :width="400"
+                    :height="200"
+                    class="product-image"
+                  ></v-img>
+                </v-sheet>
+              </v-carousel-item>
+            </v-carousel>
+          </div>
 
-    <div>
-   <v-carousel
-    hide-delimiters
-    hide-controls
-    cycle
-    interval="5000"
-    class="carousel-container"
-  >
-    <v-carousel-item v-for="(image, index) in images" :key="index">
-      <v-sheet class="image-container">
-        <v-img :src="image.url" :alt="image.alt"></v-img>
-      </v-sheet>
-    </v-carousel-item>
-  </v-carousel>
+          <v-card-title class="title align-items">{{
+            ProductDetials.title
+          }}</v-card-title>
+          <v-card-subtitle class="description align-items">{{
+            ProductDetials.description
+          }}</v-card-subtitle>
+          <v-card-title class="align-items">
+            Rating
+            {{ ProductDetials.rating }} <v-icon>mdi-star</v-icon>
+
+            Available Stock {{ ProductDetials.stock }}
+          </v-card-title>
+          <v-card-title class="price align-items">
+            Price &#8377; {{ ProductDetials.price }} rs
+          </v-card-title>
+          <v-card-title class="discount align-items">
+            Discount {{ ProductDetials.discountPercentage }}% off
+          </v-card-title>
+
+          <v-card-actions class="justify-center">
+            <v-btn
+              id="addbtn"
+              :style="{ backgroundColor: '#61da09', color: 'black' }"
+              @click="addToCart(ProductDetials)"
+              class="add-to-cart"
+            >
+              Add to Cart
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-col>
+    </v-row>
+    <v-snackbar
+      v-model="showSnackbar"
+      :color="snackbarColor"
+      class="snackbar-custom"
+    >
+      <span class="message">{{ snackbarMessage }}</span>
+    </v-snackbar>
   </div>
-</div>
-
- 
 </template>
 
 <script>
 import navbar from "./NavBar.vue";
-// import { VCarousel, VCarouselItem } from 'vuetify/lib';
-import { VCarousel, VCarouselItem } from 'vuetify/lib/components';
+
+import axios from "axios";
+import { useStore } from "../stores/cart.store";
 
 export default {
-    name:"SelectedProducts",
+  name: "SelectedProducts",
   components: {
     "nav-bar": navbar,
-       VCarousel,
-    VCarouselItem
   },
   data() {
     return {
-        images: [
-        {
-          url: 'https://www.google.com/imgres?imgurl=https%3A%2F%2Fwww.shutterstock.com%2Fimage-illustration%2Fdigital-shopping-icons-connections-on-260nw-1012157215.jpg&tbnid=vqiPKOKnaIu6rM&vet=12ahUKEwiR54eVwff_AhXblGMGHfy7DEYQMygfegUIARCMAg..i&imgrefurl=https%3A%2F%2Fwww.shutterstock.com%2Fsearch%2Fecommerce-background&docid=JMhK-FAc0snt5M&w=468&h=280&q=best%20background%20hd%20images%20for%20E-commerce%20app&ved=2ahUKEwiR54eVwff_AhXblGMGHfy7DEYQMygfegUIARCMAg',
-          alt: 'Image 1'
-        },
-        {
-          url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSWseTMdb7yq87lIPs1IhN6WJtvf1shI1EZmw&usqp=CAU',
-          alt: 'Image 2'
-        },
-        {
-          url: 'https://www.google.com/imgres?imgurl=https%3A%2F%2Fimages.pexels.com%2Fphotos%2F5632371%2Fpexels-photo-5632371.jpeg%3Fcs%3Dsrgb%26dl%3Dpexels-karolina-grabowska-5632371.jpg%26fm%3Djpg&tbnid=_0Xl-7XQPB6ScM&vet=12ahUKEwiR54eVwff_AhXblGMGHfy7DEYQMygIegUIARDWAQ..i&imgrefurl=https%3A%2F%2Fwww.pexels.com%2Fsearch%2Fe%2520commerce%2F&docid=1JHG9JaM7oZrbM&w=6652&h=4435&q=best%20background%20hd%20images%20for%20E-commerce%20app&ved=2ahUKEwiR54eVwff_AhXblGMGHfy7DEYQMygIegUIARDWAQ',
-          alt: 'Image 3'
-        },
-        {
-          url: 'slideimage4.jpg',
-          alt: 'Image 4'
-        },
-        // Add more images as needed
-      ],
-      currentIndex: 0
+      totalCount: this.updateCount(),
+      currentIndex: 0,
+      ProductDetials: {},
+      productsListDetail: {},
+      showSnackbar: false,
+      snackbarMessage: "Item Added to Cart!",
+      snackbarColor: "success",
     };
   },
 
-}
+  created() {
+    setInterval(() => {
+      this.currentIndex =
+        (this.currentIndex + 1) % this.ProductDetials.images.length;
+    }, 1000);
+  },
+  mounted() {
+    this.callDetailApi(this.$route.params.id);
+  },
+  methods: {
+    callDetailApi(itemId) {
+      axios
+        .get("https://dummyjson.com/products/" + itemId)
+        .then((response) => {
+          this.ProductDetials = response.data;
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
+    updateCount() {
+      let store = useStore();
+      return store.$state.cartItems.length;
+    },
+    addToCart(items) {
+      let store = useStore();
+      store.addedToCart(items);
+      this.showSnackbar = true;
+      this.totalCount = store.$state.cartItems.length;
+    },
+  },
+};
 </script>
 
 
+<style scoped>
+.product-details {
+  margin-top: 60px;
+  align-items: center;
+}
+
+.product-card {
+  width: 600px;
+  height: 540px;
+}
+
+.brand {
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.carousel-container {
+  height: 200px;
+  position: relative;
+  /* z-index: -1; */
+}
+
+.product-image {
+  margin: auto;
+}
+
+.title {
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.description {
+  font-size: 14px;
+}
+
+.rating {
+  background-color: #61da09;
+  color: black;
+  font-weight: bold;
+}
+
+.price,
+.discount,
+.stock {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.add-to-cart {
+  font-weight: bold;
+}
+.align-items {
+  text-align: center;
+  margin: auto;
+  align-items: center;
+}
+.tick-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 24px;
+  color: green;
+}
+.message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.snackbar-custom {
+  position: fixed;
+  top: -600px;
+  right: -1000px;
+}
+/* .v-card {
+  z-index: 1 !important;
+} */
+</style>
 <style>
-.background-image {
-  height: 100%;
-  object-fit: cover;
-  animation: slideShow 10s infinite;
+.v-window__controls {
+  display: none !important;
 }
-
-@keyframes slideShow {
-  0% { opacity: 0; }
-  20% { opacity: 1; }
-  33.33% { opacity: 1; }
-  53.33% { opacity: 0; }
-  100% { opacity: 0; }
-}
-
 </style>

@@ -1,18 +1,18 @@
 <template>
-  <div class="app-container">
-    <nav-bar></nav-bar>
-    <div class="mt-20" style="top: 50px"></div>
-    <router-view />
-  </div>
+  <v-app>
+    <div class="app-container">
+      <nav-bar></nav-bar>
+
+      <router-view />
+    </div>
+  </v-app>
 </template>
 
 <script>
 import { RouterView } from "vue-router";
-import navbar from "./views/NavBar.vue";
 export default {
   name: "App",
   components: {
-    "nav-bar": navbar,
     "router-view": RouterView,
   },
   data() {
@@ -23,4 +23,7 @@ export default {
 
 
 <style>
+.v-card {
+  z-index: 9999 !important;
+}
 </style>
