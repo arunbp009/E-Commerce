@@ -6,7 +6,11 @@
         id="new"
         style="position: relative; padding: 12px 0; position: fixed"
       >
-        <v-img src="logo.png" class="navbar__logo"></v-img>
+        <v-img
+          @click="goToMainPage"
+          src="/src/assets/images/logo.png"
+          class="navbar__logo"
+        ></v-img>
 
         <div class="navbar__links">
           <div>
@@ -19,10 +23,9 @@
             ></RouterLink>
           </div>
         </div>
-        <v-col cols="4" sm="2" md="3">
+        <v-col class="searchbox">
           <v-text-field
             v-model="search"
-            append-icon="mdi-magnify"
             label="Search"
             outlined
             rounded
@@ -123,11 +126,24 @@ export default {
           console.error(error);
         });
     },
+    goToMainPage() {
+      this.$router.push({ path: "/productslist" });
+    },
   },
 };
 </script>
 
 <style>
+/* #input-1{
+ background-color: aliceblue;
+} */
+.searchbox {
+  position: relative;
+  z-index: 1;
+  background-color: #fff;
+  margin: 0px;
+  padding: 0px;
+}
 .navbar {
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -204,5 +220,11 @@ export default {
 }
 .dark .mdi-cart::before {
   color: #000;
+}
+/* .v-messages{
+  display: none;
+} */
+.v-input__details {
+  display: none;
 }
 </style>

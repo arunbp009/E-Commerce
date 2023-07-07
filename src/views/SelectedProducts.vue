@@ -6,7 +6,7 @@
         <v-card
           class="mb-4 product-card align-items"
           :style="{
-            backgroundColor: '#f3c47c',
+            backgroundColor: '#000',
             color: 'black',
             margin: '100px auto 0 ',
           }"
@@ -20,7 +20,7 @@
               :interval="currentIndex === 0 ? 500 : 3000"
               hide-delimiters
               class="carousel-container"
-              :style="{ backgroundColor: '#f3c47c', color: 'black' }"
+              :style="{ backgroundColor: '#000' }"
             >
               <v-carousel-item
                 v-for="(image, index) in ProductDetials.images"
@@ -142,6 +142,7 @@ export default {
 .product-details {
   margin-top: 60px;
   align-items: center;
+  background-color:rgb(228, 230, 220);
 }
 
 .product-card {
@@ -193,6 +194,7 @@ export default {
   text-align: center;
   margin: auto;
   align-items: center;
+  color: white;
 }
 .tick-icon {
   position: absolute;
