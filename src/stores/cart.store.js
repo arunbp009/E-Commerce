@@ -1,13 +1,14 @@
-import { defineStore } from 'pinia';
-// import axios from 'axios';
+import { defineStore } from "pinia";
 
-export const useStore = defineStore('storeId',{
+import axios from "axios";
 
+export const useStore = defineStore("storeId", {
   state: () => ({
     // productsList: [],
-    selectedProduct:[],
-    cartItems:[],
+    selectedProduct: [],
+    cartItems: [],
   }),
+
   actions: {
     // async fetchData() {
     //   try {
@@ -23,9 +24,9 @@ export const useStore = defineStore('storeId',{
     //   this.selectedProduct = args
     // },
 
-    addedToCart(item){
-      this.cartItems.push(item)
-    }
+    addedToCart(item) {
+      this.cartItems.push(item);
+    },
   },
   getters: {
     // getProductsList(state) {
@@ -34,17 +35,17 @@ export const useStore = defineStore('storeId',{
     // getSelectedProduct(state){
     //   return state.selectedProduct
     // },
-    getCartItems(state){
-      return state.cartItems
-    }
+    getCartItems(state) {
+      return state.cartItems;
+    },
   },
   mutations: {
-    // setProductsList(products) {
-    //   this.productsList = products;
-    // },
-    toTheCart(arr){
-      this.cartItems = arr
-    }
-
+    setProductsList(products) {
+      console.log("products aaaaaaaaaa", products);
+      this.productsList = products;
+    },
+    toTheCart(arr) {
+      this.cartItems = arr;
+    },
   },
 });

@@ -84,14 +84,17 @@
 <script>
 import navbar from "./NavBar.vue";
 
+
 import axios from "axios";
 import { useStore } from "../stores/cart.store";
+
 
 
 export default {
   name: "SelectedProducts",
   components: {
     "nav-bar": navbar,
+
   },
   data() {
     return {
@@ -102,8 +105,12 @@ export default {
       showSnackbar: false,
       snackbarMessage: "Item Added to Cart!",
       snackbarColor: "success",
-    };
+
+  
+  }
   },
+    
+
   created() {
     setInterval(() => {
       this.currentIndex =

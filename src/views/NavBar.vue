@@ -6,6 +6,7 @@
         id="new"
         style="position: relative; padding: 12px 0; position: fixed"
       >
+
         <v-img src="logo.png" class="navbar__logo"></v-img>
 
         <div class="navbar__links">
@@ -50,6 +51,7 @@
             {{ totalCount ? totalCount : 0 }}
           </span>
         </div>
+
         <div style="margin: 20px 30px 0 30px">
           <v-switch
             v-model="darkMode"
@@ -66,7 +68,6 @@
 <script>
 import { RouterLink } from "vue-router";
 import axios from "axios";
-
 export default {
   name: "NavBar",
   components: {
@@ -100,6 +101,7 @@ export default {
       }
     },
   },
+
   methods: {
     toggleDarkMode() {
       this.darkMode = !this.darkMode;
@@ -119,6 +121,7 @@ export default {
     cartItems() {
       this.$router.push({ path: "/checkout" });
     },
+
     fetchData() {
       axios
         .get("https://dummyjson.com/products")
@@ -133,6 +136,7 @@ export default {
           console.error(error);
         });
     },
+
   },
 };
 </script>
@@ -200,6 +204,17 @@ export default {
 .dark #new {
   transition: all 1s ease;
   box-shadow: inset 0 0 100px 0 rgb(204, 204, 204) !important;
+}
+.dark .mdi-cart::before {
+  color: #000;
+}
+.dark .app-container {
+  background: #000;
+  color: #fff;
+}
+.dark #new {
+  transition: all 1s ease;
+  box-shadow: inset 0 0 0 0 #3e9fdc !important;
 }
 .dark .mdi-cart::before {
   color: #000;
