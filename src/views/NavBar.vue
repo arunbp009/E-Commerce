@@ -12,17 +12,6 @@
           class="navbar__logo"
         ></v-img>
 
-        <div class="navbar__links">
-          <div>
-            <RouterLink to="/productslist" class="navbar__link"></RouterLink>
-          </div>
-          <div>
-            <RouterLink
-              to="/selectedproducts"
-              class="navbar__link"
-            ></RouterLink>
-          </div>
-        </div>
         <v-col class="searchbox">
           <v-text-field
             v-model="search"
@@ -158,11 +147,6 @@ export default {
   max-height: 40px;
 }
 
-.navbar__links {
-  display: flex;
-  align-items: center;
-  margin-right: 30px;
-}
 
 .navbar__link {
   color: white;
