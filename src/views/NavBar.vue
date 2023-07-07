@@ -8,7 +8,7 @@
       >
         <v-img
           @click="goToMainPage"
-          src="logo.png"
+          src="/src/assets/images/logo.png"
           class="navbar__logo"
         ></v-img>
 
