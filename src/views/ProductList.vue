@@ -125,6 +125,7 @@ export default {
           return ele.title.toLowerCase().includes(searchValue.toLowerCase());
         });
         this.productsList = arrayFilter;
+          this.productCount = this.productsList.length;
       } else {
         this.fetchData();
       }
