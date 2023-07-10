@@ -5,6 +5,7 @@
       @sortData="sortData"
       :totalCount="totalCount"
       :productCount="productCount"
+      @filterData="filterData"
     ></nav-bar>
     <div>
       <v-row class="justify-center common__container" style="top: 100px">
@@ -60,7 +61,8 @@ export default {
   },
   data() {
     return {
-      productCount:0,
+      loading: false,
+      productCount: 0,
       totalCount: this.updateCount(),
       productsList: {},
       store: useStore(),
@@ -81,7 +83,7 @@ export default {
         .get("https://dummyjson.com/products")
         .then((response) => {
           this.productsList = response.data.products;
-          this.productCount=this.productsList.length
+          this.productCount = this.productsList.length;
         })
         .catch((error) => {
           console.error(error);
@@ -111,15 +113,25 @@ export default {
         .then((response) => {
           this.productsList = [];
           this.productsList = response.data.products;
-          this.productCount=this.productsList.length
+          this.productCount = this.productsList.length;
         })
         .catch((error) => {
           console.error(error);
         });
     },
+    filterData(searchValue) {
+      if (searchValue != "") {
+        const arrayFilter = this.productsList.filter((ele) => {
+          return ele.title.toLowerCase().includes(searchValue.toLowerCase());
+        });
+        this.productsList = arrayFilter;
+      } else {
+        this.fetchData();
+      }
+    },
     sortData() {
       this.productsList = [...this.productsList].reverse();
-      this.productCount=this.productsList.length
+      this.productCount = this.productsList.length;
     },
   },
 };
@@ -142,17 +154,23 @@ export default {
   right: -1150px;
 }
 .all__cards {
-    background: linear-gradient(65deg,rgb(72, 190, 249) 50%,rgb(158, 223, 255) 50%);
-    color: #fff;
-    text-shadow: 0 0 4px #000;
-    transition: all 1s ease-in;
+  background: linear-gradient(
+    65deg,
+    rgb(72, 190, 249) 50%,
+    rgb(158, 223, 255) 50%
+  );
+  color: #fff;
+  text-shadow: 0 0 4px #000;
+  transition: all 1s ease-in;
 }
 .dark .all__cards {
-    background: linear-gradient(-65deg,rgb(160, 160, 160) 50%,rgb(87, 87, 87) 50%);
-    color: #000;
-    text-shadow: 0 0 0;
-    transition: all 1s ease-in;
-
+  background: linear-gradient(
+    -65deg,
+    rgb(160, 160, 160) 50%,
+    rgb(87, 87, 87) 50%
+  );
+  color: #000;
+  text-shadow: 0 0 0;
+  transition: all 1s ease-in;
 }
-
 </style>

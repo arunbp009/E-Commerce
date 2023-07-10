@@ -6,7 +6,6 @@
         <v-card
           class="mb-4 product-card align-items"
           :style="{
-           
             color: 'black',
             margin: '100px auto 0 ',
           }"
@@ -142,7 +141,7 @@ export default {
 .product-details {
   margin-top: 60px;
   align-items: center;
-  background-color:rgb(228, 230, 220);
+  background-color: rgb(228, 230, 220);
 }
 
 .product-card {
@@ -217,7 +216,6 @@ export default {
 /* .v-card {
   z-index: 1 !important;
 } */
-
 </style>
 <style>
 .v-card__underlay {
@@ -233,10 +231,9 @@ export default {
   background: rgb(72, 190, 249);
   z-index: 0 !important;
 }
-.dark .product-card{
-      background-color: rgb(255, 255, 255) !important;
-    z-index: 0 !important;
-
+.dark .product-card {
+  background-color: rgb(255, 255, 255) !important;
+  z-index: 0 !important;
 }
 .card__texts {
   background: rgb(72, 190, 249);
@@ -245,5 +242,4 @@ export default {
   background-color: rgb(255, 255, 255) !important;
   color: #000;
 }
-
 </style>
