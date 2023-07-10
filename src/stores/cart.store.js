@@ -11,11 +11,15 @@ export const useStore = defineStore("storeId", {
       this.cartItems = items;
     },
 
-    addedToCart(item) {
+    addedToCart(item, deleteItem) {
       if (item.length == 0) {
         this.cartItems = [];
       } else {
         this.cartItems.push(item);
+      }
+      if (deleteItem) {
+        this.cartItems = [];
+        this.cartItems = item;
       }
     },
   },

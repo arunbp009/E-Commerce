@@ -1,8 +1,13 @@
 <template>
   <div style="margin-top: 40px">
-    <nav-bar @searchValue="searchProduct" :totalCount="totalCount"></nav-bar>
+    <nav-bar
+      @searchValue="searchProduct"
+      @sortData="sortData"
+      :totalCount="totalCount"
+      :productCount="productCount"
+    ></nav-bar>
     <div>
-      <v-row class="justify-center" style="top: 100px">
+      <v-row class="justify-center common__container" style="top: 100px">
         <v-col
           v-for="product in productsList"
           :key="product.id"
@@ -11,19 +16,19 @@
           md="4"
           lg="3"
         >
-          <v-card class="mx-auto" max-width="344">
+          <v-card class="mx-auto all__cards" max-width="344">
             <v-img :src="product.thumbnail" height="200px" cover></v-img>
 
             <v-card-title> {{ product.title }}</v-card-title>
 
             <v-card-actions class="justify-center">
               <v-btn
-                :style="{ backgroundColor: '#61da09', color: 'black' }"
+                :style="{ backgroundColor: 'rgb(254 255 0)', color: 'black' }"
                 @click="addToCart(product)"
                 >Add to Cart</v-btn
               >
               <v-btn
-                :style="{ backgroundColor: '#07aefa', color: 'black' }"
+                :style="{ backgroundColor: 'rgb(0 105 255)', color: '#fff' }"
                 @click="viewDetails(product)"
                 >View Details</v-btn
               >
@@ -55,6 +60,7 @@ export default {
   },
   data() {
     return {
+      productCount:0,
       totalCount: this.updateCount(),
       productsList: {},
       store: useStore(),
@@ -75,6 +81,7 @@ export default {
         .get("https://dummyjson.com/products")
         .then((response) => {
           this.productsList = response.data.products;
+          this.productCount=this.productsList.length
         })
         .catch((error) => {
           console.error(error);
@@ -89,7 +96,7 @@ export default {
       store.addedToCart(product);
       this.showSnackbar = true;
       this.totalCount = store.$state.cartItems.length;
-        setTimeout(() => {
+      setTimeout(() => {
         this.showSnackbar = false;
       }, 2000);
     },
@@ -104,10 +111,15 @@ export default {
         .then((response) => {
           this.productsList = [];
           this.productsList = response.data.products;
+          this.productCount=this.productsList.length
         })
         .catch((error) => {
           console.error(error);
         });
+    },
+    sortData() {
+      this.productsList = [...this.productsList].reverse();
+      this.productCount=this.productsList.length
     },
   },
 };
@@ -129,4 +141,18 @@ export default {
   top: -600px;
   right: -1150px;
 }
+.all__cards {
+    background: linear-gradient(65deg,rgb(72, 190, 249) 50%,rgb(158, 223, 255) 50%);
+    color: #fff;
+    text-shadow: 0 0 4px #000;
+    transition: all 1s ease-in;
+}
+.dark .all__cards {
+    background: linear-gradient(-65deg,rgb(160, 160, 160) 50%,rgb(87, 87, 87) 50%);
+    color: #000;
+    text-shadow: 0 0 0;
+    transition: all 1s ease-in;
+
+}
+
 </style>

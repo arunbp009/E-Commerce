@@ -6,11 +6,11 @@
         id="new"
         style="position: relative; padding: 12px 0; position: fixed"
       >
-        <v-img
+        <img
           @click="goToMainPage"
           src="/src/assets/images/logo.png"
           class="navbar__logo"
-        ></v-img>
+        >
 
         <v-col class="searchbox">
           <v-text-field
@@ -21,9 +21,17 @@
             dense
             solo-inverted
           ></v-text-field>
-        </v-col>
+        <span class="pro__count">{{productCount}}</span>
 
-        <v-spacer></v-spacer>
+        </v-col>
+        <v-icon
+          class="icon-sort"
+          @click="sortData"
+          :class="{ 'rotate-180': descending }"
+          >mdi-sort</v-icon
+        >
+
+        <!-- <v-spacer></v-spacer> -->
         <div class="crtIcon">
           <v-icon class="navbar__cart-icon" @click="cartItems()"
             >mdi-cart</v-icon
@@ -32,7 +40,7 @@
           </span>
         </div>
 
-        <div style="margin: 20px 30px 0 30px">
+        <div>
           <v-switch
             v-model="darkMode"
             :label="label"
@@ -54,6 +62,8 @@ export default {
   },
   data() {
     return {
+      
+      descending: false,
       isEditing: null,
       search: "",
       darkMode: false,
@@ -69,6 +79,11 @@ export default {
       type: Number,
       default: 0,
     },
+    productCount: {
+      type: Number,
+      default: 0,
+    },
+  
   },
   mounted() {
     this.fetchData();
@@ -82,6 +97,9 @@ export default {
   },
 
   methods: {
+    sortData() {
+      this.$emit("sortData");
+    },
     toggleDarkMode() {
       this.darkMode = !this.darkMode;
       const AppID = document.getElementById("app");
@@ -127,11 +145,14 @@ export default {
  background-color: aliceblue;
 } */
 .searchbox {
-  position: relative;
-  z-index: 1;
-  background-color: #fff;
-  margin: 0px;
-  padding: 0px;
+    position: relative;
+    z-index: 1;
+    background-color: #fff;
+    padding: 0px;
+    margin: 0 0 0 40px;
+    width: 100%;
+    max-width: 800px;
+    border-radius: 7px;
 }
 .navbar {
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
@@ -146,7 +167,6 @@ export default {
 .navbar__logo {
   max-height: 40px;
 }
-
 
 .navbar__link {
   color: white;
@@ -187,20 +207,12 @@ export default {
   background: #000;
   color: #fff;
 }
-.dark #new {
-  transition: all 1s ease;
-  box-shadow: inset 0 0 100px 0 rgb(204, 204, 204) !important;
-}
 .dark .mdi-cart::before {
   color: #000;
 }
-.dark .app-container {
-  background: #000;
-  color: #fff;
-}
 .dark #new {
   transition: all 1s ease;
-  box-shadow: inset 0 0 0 0 #3e9fdc !important;
+  box-shadow: inset 0 0 100px 0 #000000 !important;
 }
 .dark .mdi-cart::before {
   color: #000;
@@ -210,5 +222,29 @@ export default {
 } */
 .v-input__details {
   display: none;
+}
+.rotate-180 {
+  transform: rotate(180deg);
+}
+.pro__count {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: #1723ac;
+  padding: 17px;
+  border-radius: 0 7px 7px 0;
+  color: #fff;
+}
+.common__container{
+  width: 100%;
+  max-width: 1800px;
+  margin: auto;
+}
+.navbar__app-bar > div{
+  justify-content: space-around  !important;;
+  width: 100%;
+  max-width: 1800px;
+  margin: auto;
 }
 </style>
