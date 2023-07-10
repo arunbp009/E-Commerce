@@ -2,16 +2,16 @@
   <div class="product-details">
     <nav-bar :totalCount="totalCount"></nav-bar>
     <v-row>
-      <v-col>
+      <v-col class="view__details">
         <v-card
           class="mb-4 product-card align-items"
           :style="{
-            backgroundColor: '#000',
+           
             color: 'black',
             margin: '100px auto 0 ',
           }"
         >
-          <v-card-title class="brand align-items">{{
+          <v-card-title class="brand align-items card__texts">{{
             ProductDetials.brand
           }}</v-card-title>
           <div class="carousel-container">
@@ -38,26 +38,26 @@
             </v-carousel>
           </div>
 
-          <v-card-title class="title align-items">{{
+          <v-card-title class="title align-items card__texts">{{
             ProductDetials.title
           }}</v-card-title>
-          <v-card-subtitle class="description align-items">{{
+          <v-card-subtitle class="description align-items card__texts">{{
             ProductDetials.description
           }}</v-card-subtitle>
-          <v-card-title class="align-items">
+          <v-card-title class="align-items card__texts">
             Rating
             {{ ProductDetials.rating }} <v-icon>mdi-star</v-icon>
 
             Available Stock {{ ProductDetials.stock }}
           </v-card-title>
-          <v-card-title class="price align-items">
+          <v-card-title class="price align-items card__texts">
             Price &#8377; {{ ProductDetials.price }} rs
           </v-card-title>
-          <v-card-title class="discount align-items">
+          <v-card-title class="discount align-items card__texts">
             Discount {{ ProductDetials.discountPercentage }}% off
           </v-card-title>
 
-          <v-card-actions class="justify-center">
+          <v-card-actions class="justify-center card__texts">
             <v-btn
               id="addbtn"
               :style="{ backgroundColor: '#61da09', color: 'black' }"
@@ -217,9 +217,33 @@ export default {
 /* .v-card {
   z-index: 1 !important;
 } */
+
 </style>
 <style>
+.v-card__underlay {
+  display: none !important;
+}
 .v-window__controls {
   display: none !important;
 }
+.dark .view__details {
+  background: #000;
+}
+.product-card {
+  background: rgb(72, 190, 249);
+  z-index: 0 !important;
+}
+.dark .product-card{
+      background-color: rgb(255, 255, 255) !important;
+    z-index: 0 !important;
+
+}
+.card__texts {
+  background: rgb(72, 190, 249);
+}
+.dark .card__texts {
+  background-color: rgb(255, 255, 255) !important;
+  color: #000;
+}
+
 </style>

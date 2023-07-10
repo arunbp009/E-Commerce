@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app id="main__wrappper">
     <div class="app-container">
       <nav-bar></nav-bar>
 
@@ -25,5 +25,9 @@ export default {
 <style>
 .v-card {
   z-index: 9999 !important;
+}
+.dark .main__wrappper + div{
+color: #fff;
+background: #000;
 }
 </style>

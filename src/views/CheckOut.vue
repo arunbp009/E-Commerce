@@ -15,11 +15,11 @@
         <v-list lines="two">
           <div class="d-flex">
             <h1 class="items">Items</h1>
-            <span class="count-badge">{{ cartItemsAdded.length }}</span>
+            <span class="count-badge">{{ cartItems.length }}</span>
           </div>
 
           <v-list-item
-            v-for="item in cartItemsAdded"
+            v-for="item in cartItems"
             :key="item.title"
             :prepend-avatar="item.thumbnail"
             class="imgCustom"
@@ -63,7 +63,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="item in cartItemsAdded" :key="item.id">
+              <tr v-for="item in cartItems" :key="item.id">
                 <td>{{ item.title }}</td>
                 <td>{{ item.afterDiscountPrice }}</td>
                 <td>{{ item.PCsCount }}</td>
@@ -150,7 +150,7 @@ export default {
       showSuccessPopup: false,
       dialogVisible: false,
       cartItems: [],
-      cartItemsAdded: [],
+      // cartItemsAdded: [],
       totalAmount: 0,
       totalCount: this.updateCount(),
     };
@@ -174,30 +174,12 @@ export default {
   methods: {
     cart() {
       this.cartItems = this.getCartItems;
-      if (this.cartItems.length == 0) {
-        this.totalAmount = 0.0;
-      }
-      // ----------
-      const objectCount = {};
-      this.cartItems.forEach((obj) => {
-        const key = JSON.stringify(obj); // Convert the object to a string for use as the key
-        objectCount[key] = (objectCount[key] || 0) + 1;
-      });
+      this.totalAmount = 0.0;
+  
+    
 
-      const uniqueObjects = Object.keys(objectCount).map((key) =>
-        JSON.parse(key)
-      );
-      this.totalCount = 0;
-      uniqueObjects.forEach((obj) => {
-        const key = JSON.stringify(obj);
-        const count = objectCount[key];
-        obj.PCsCount = count;
-        this.totalCount += obj.PCsCount;
-      });
-      // this.totalCount=4
-      this.cartItemsAdded = uniqueObjects;
-
-      this.cartItemsAdded.forEach((ele) => {
+      this.cartItems.forEach((ele) => {
+        ele.PCsCount = 1;
         let afterDiscount = 100 - ele.discountPercentage;
         ele.afterDiscountPrice = (ele.price * afterDiscount) / 100;
         ele.afterDiscountPrice = ele.afterDiscountPrice.toFixed(2);
@@ -210,22 +192,25 @@ export default {
       this.$router.push({ path: "/productslist" });
     },
     deleteItem(deleteItem) {
-      const index = this.cartItemsAdded.findIndex(
-        (ele) => ele.id === deleteItem.id
-      );
+      const index = this.cartItems.findIndex((ele) => ele.id === deleteItem.id);
       if (index > -1) {
-        this.cartItemsAdded.splice(index, 1);
+        this.cartItems.splice(index, 1);
       }
       this.totalAmount = 0;
 
-      this.cartItemsAdded.forEach((ele) => {
+      this.cartItems.forEach((ele) => {
         this.totalAmount += ele.afterDiscountPrice * ele.PCsCount;
       });
       this.totalAmount = Math.floor(this.totalAmount);
+      let store = useStore();
+
+      store.addedToCart([]);
+      store.addedToCart(this.cartItems, "deleteItem");
       this.updateCount();
+      this.cartItems = this.getCartItems;
     },
     orderItem() {
-      if (this.cartItemsAdded.length > 0) {
+      if (this.cartItems.length > 0) {
         this.dialogVisible = true;
       } else {
         this.showErrorPopup = true;
@@ -233,13 +218,12 @@ export default {
     },
     confirmAction() {
       this.dialogVisible = false;
-      console.log("data to send backend", this.cartItemsAdded);
-      if (this.cartItemsAdded.length > 0) {
+      console.log("data to send backend", this.cartItems);
+      if (this.cartItems.length > 0) {
         this.showSuccessPopup = true;
-        setTimeout(()=>{
-        this.$router.push({ path: "/productslist" });
-
-        },2000)
+        setTimeout(() => {
+          this.$router.push({ path: "/productslist" });
+        }, 2000);
       }
 
       let store = useStore();
@@ -341,5 +325,8 @@ export default {
 }
 .text-bold {
   font-weight: bold;
+}
+.dark #main__wrappper {
+  background: #000 !important;
 }
 </style>
