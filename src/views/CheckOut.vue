@@ -175,8 +175,6 @@ export default {
     cart() {
       this.cartItems = this.getCartItems;
       this.totalAmount = 0.0;
-  
-    
 
       this.cartItems.forEach((ele) => {
         ele.PCsCount = 1;

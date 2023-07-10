@@ -10,7 +10,7 @@
           @click="goToMainPage"
           src="/src/assets/images/logo.png"
           class="navbar__logo"
-        >
+        />
 
         <v-col class="searchbox">
           <v-text-field
@@ -21,9 +21,17 @@
             dense
             solo-inverted
           ></v-text-field>
-        <span class="pro__count">{{productCount}}</span>
-
+          <span class="pro__count">{{ productCount }}</span>
         </v-col>
+        <v-icon @click="filterItemsIcon">mdi-filter</v-icon>
+        <input
+          v-if="filterPopUP"
+          type="text"
+          v-model="filterValue"
+          @keyup="filterItems"
+          placeholder="Search"
+          style="background-color: white"
+        />
         <v-icon
           class="icon-sort"
           @click="sortData"
@@ -62,7 +70,8 @@ export default {
   },
   data() {
     return {
-      
+      filterValue: "",
+      filterPopUP: false,
       descending: false,
       isEditing: null,
       search: "",
@@ -83,7 +92,6 @@ export default {
       type: Number,
       default: 0,
     },
-  
   },
   mounted() {
     this.fetchData();
@@ -97,6 +105,12 @@ export default {
   },
 
   methods: {
+    filterItemsIcon() {
+      this.filterPopUP = !this.filterPopUP;
+    },
+    filterItems() {
+      this.$emit("filterData", this.filterValue);
+    },
     sortData() {
       this.$emit("sortData");
     },
@@ -145,14 +159,14 @@ export default {
  background-color: aliceblue;
 } */
 .searchbox {
-    position: relative;
-    z-index: 1;
-    background-color: #fff;
-    padding: 0px;
-    margin: 0 0 0 40px;
-    width: 100%;
-    max-width: 800px;
-    border-radius: 7px;
+  position: relative;
+  z-index: 1;
+  background-color: #fff;
+  padding: 0px;
+  margin: 0 0 0 40px;
+  width: 100%;
+  max-width: 800px;
+  border-radius: 7px;
 }
 .navbar {
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
@@ -236,13 +250,13 @@ export default {
   border-radius: 0 7px 7px 0;
   color: #fff;
 }
-.common__container{
+.common__container {
   width: 100%;
   max-width: 1800px;
   margin: auto;
 }
-.navbar__app-bar > div{
-  justify-content: space-around  !important;;
+.navbar__app-bar > div {
+  justify-content: space-around !important;
   width: 100%;
   max-width: 1800px;
   margin: auto;
