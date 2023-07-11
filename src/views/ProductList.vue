@@ -52,7 +52,7 @@
 import axios from "axios";
 import { mapState } from "pinia";
 import { useStore } from "../stores/cart.store";
-import navbar from "./NavBar.vue";
+import navbar from "../components/NavBar.vue";
 
 export default {
   name: "ProductList",

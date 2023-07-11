@@ -80,7 +80,7 @@
 </template>
 
 <script>
-import navbar from "./NavBar.vue";
+import navbar from "../components/NavBar.vue";
 
 import axios from "axios";
 import { useStore } from "../stores/cart.store";
