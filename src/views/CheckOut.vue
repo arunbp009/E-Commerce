@@ -138,7 +138,7 @@
 <script>
 import { useStore } from "../stores/cart.store";
 import { mapState } from "pinia";
-import navbar from "./NavBar.vue";
+import navbar from "../components/NavBar.vue";
 
 export default {
   components: {
@@ -204,7 +204,7 @@ export default {
 
       store.addedToCart([]);
       store.addedToCart(this.cartItems, "deleteItem");
-      this.updateCount();
+      this.totalCount= this.updateCount()
       this.cartItems = this.getCartItems;
     },
     orderItem() {

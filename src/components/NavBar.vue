@@ -25,12 +25,13 @@
         </v-col>
         <v-icon @click="filterItemsIcon">mdi-filter</v-icon>
         <input
+        class="input_filter"
           v-if="filterPopUP"
           type="text"
           v-model="filterValue"
           @keyup="filterItems"
-          placeholder="Search"
-          style="background-color: white"
+          placeholder="Filter Items"
+          
         />
         <v-icon
           class="icon-sort"
@@ -94,12 +95,14 @@ export default {
     },
   },
   mounted() {
+    this.filterPopUP=false
     this.fetchData();
   },
   watch: {
     search(newValue) {
       if (newValue != "") {
         this.funSearch(newValue);
+         this.filterPopUP=false
       }
     },
   },
@@ -115,6 +118,7 @@ export default {
       this.$emit("sortData");
     },
     toggleDarkMode() {
+       this.filterPopUP=false
       this.darkMode = !this.darkMode;
       const AppID = document.getElementById("app");
       if (this.darkMode) {
@@ -130,6 +134,7 @@ export default {
       this.$emit("searchValue", val);
     },
     cartItems() {
+       this.filterPopUP=false
       this.$router.push({ path: "/checkout" });
     },
 
@@ -260,5 +265,11 @@ export default {
   width: 100%;
   max-width: 1800px;
   margin: auto;
+}
+.input_filter{
+border-radius: 3px;
+background-color: white;
+
+
 }
 </style>
